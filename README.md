@@ -14,3 +14,5 @@ if a version from `package.json` does not exist in NPM
 1. extract pre-release ID (eg. v1.0.5-alpha.0 => alpha)
 2. push new version to NPM with correct preId or as `latest`
 3. create a tag and a github release
+
+optional: bump "alpha" versions on every commit to `main` that didn't update package.json, or manual action for that.
