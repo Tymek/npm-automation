@@ -16,3 +16,7 @@ if a version from `package.json` does not exist in NPM
 3. create a tag and a github release
 
 optional: bump "alpha" versions on every commit to `main` that didn't update package.json, or manual action for that.
+
+# Manual steps ("how to use")
+
+1. Create NPM_TOKEN on npmjs.com and add it to the repository actions secret.
