@@ -40,6 +40,9 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Create git tag
+        run: git tag $PACKAGE_VERSION
+
       - name: Publish to NPM
         run: pnpm publish --access public --tag $PACKAGE_VERSION
         env:
