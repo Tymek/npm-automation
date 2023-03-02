@@ -35,7 +35,7 @@ jobs:
 
       - name: Get version from package.json
         run: |
-          echo "PACKAGE_VERSION=$(node -p "require('./package.json').version") >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
           echo "PACKAGE_TAG=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec(require('./package.json').version)?.[1] ?? 'latest'")" >> $GITHUB_ENV
           echo $PACKAGE_VERSION
           echo $PACKAGE_TAG
