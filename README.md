@@ -19,4 +19,5 @@ optional: bump "alpha" versions on every commit to `main` that didn't update pac
 
 # Manual steps ("how to use")
 
-1. Create NPM_TOKEN on npmjs.com and add it to the repository actions secret.
+1. Create `NPM_TOKEN` on npmjs.com and add it to the repository actions secret.
+2. Create `GH_ACCESS_TOKEN` - allow workflow to push tags.

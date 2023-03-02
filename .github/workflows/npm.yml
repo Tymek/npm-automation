@@ -16,14 +16,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org"
 
       - uses: pnpm/action-setup@v2
-        name: Install pnpm
         id: pnpm-install
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -31,17 +29,24 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Set release tag
-        run: echo "PACKAGE_VERSION=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec(require('./package.json').version)?.[1] ?? 'latest'")" >> $GITHUB_ENV
+      - name: Get release tag from package.json
+        run: |
+          echo "PACKAGE_VERSION=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec(require('./package.json').version)?.[1] ?? 'latest'")" >> $GITHUB_ENV
+          echo $PACKAGE_VERSION
 
       - name: Run tests
         run: pnpm test
 
       - name: Create git tag
-        run: git tag $PACKAGE_VERSION && git push --tags
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag $PACKAGE_VERSION
+          git push --tags
 
       - name: Publish to NPM
         run: pnpm publish --access public --tag $PACKAGE_VERSION
