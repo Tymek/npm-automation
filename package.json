@@ -1,6 +1,6 @@
 {
   "name": "@scrlk/npm-automation",
-  "version": "1.0.4-alpha.0",
+  "version": "1.0.5-rc.0",
   "description": "JS SDK release workflow",
   "main": "index.js",
   "scripts": {
