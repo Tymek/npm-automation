@@ -41,7 +41,7 @@ jobs:
         run: pnpm test
 
       - name: Create git tag
-        run: git tag $PACKAGE_VERSION
+        run: git tag $PACKAGE_VERSION && git push --tags
 
       - name: Publish to NPM
         run: pnpm publish --access public --tag $PACKAGE_VERSION
