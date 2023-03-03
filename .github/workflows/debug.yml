@@ -2,16 +2,6 @@ name: Check what's wrong with GitHub release automation
 
 on:
   workflow_dispatch:
-    inputs:
-      preid:
-        description: "Prerelease ID"
-        required: true
-        default: "alpha"
-        type: choice
-        options:
-          - alpha
-          - beta
-          - rc
 
 jobs:
   debug:
