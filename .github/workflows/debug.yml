@@ -8,6 +8,12 @@ jobs:
     name: 💚 Debug
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        id: setup-git-checkout
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          fetch-depth: 2
+
       - name: Get version from package.json
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
