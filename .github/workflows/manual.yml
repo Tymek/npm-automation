@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       preid:
-        description: 'Prerelease ID'
+        description: "Prerelease ID"
         required: true
-        default: 'alpha'
+        default: "alpha"
         type: choice
         options:
           - alpha
@@ -37,6 +37,13 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 2
 
-      - run: pnpm version --git-tag-version --preid ${{ github.event.inputs.preid }} prerelease
+      - run: pnpm version --preid ${{ github.event.inputs.preid }} --git-tag-version=false prerelease
 
-      - run: git push --follow-tags
+      - id: Commit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          git commit -am "chore: ${PACKAGE_VERSION} pre-release"
+
+      - run: git push
