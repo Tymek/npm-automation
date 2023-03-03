@@ -1,0 +1,42 @@
+name: Bump pre-release version
+
+env:
+  NODE_VERSION: 19
+  PNPM_VERSION: 7
+
+on:
+  workflow_dispatch:
+    inputs:
+      preid:
+        description: 'Prerelease ID'
+        required: true
+        default: 'alpha'
+        type: choice
+        options:
+          - alpha
+          - beta
+          - rc
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org"
+
+      - uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          fetch-depth: 2
+
+      - run: pnpm version --git-tag-version --preid ${{ github.event.inputs.preid }} prerelease
+
+      - run: git push --follow-tags

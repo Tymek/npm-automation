@@ -21,6 +21,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org"
 
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          fetch-depth: 2
+
       - uses: pnpm/action-setup@v2
         id: pnpm-install
         with:
@@ -29,14 +34,12 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-
       - name: Get version from package.json
         run: |
-          echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo "PACKAGE_TAG=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec(require('./package.json').version)?.[1] ?? 'latest'")" >> $GITHUB_ENV
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_TAG=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec('$PACKAGE_VERSION')?.[1] ?? 'latest'")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_TAG=$PACKAGE_TAG" >> $GITHUB_ENV
 
       - name: Run tests
         run: pnpm test
@@ -55,14 +58,14 @@ jobs:
 
       - name: Publish GitHub Release
         run: |
-          WORKFLOW_RELEASE_PRERELEASE="$([[ "$PACKAGE_TAG" == "latest" ]] && echo "false" || echo "true")"
+          WORKFLOW_RELEASE_PRERELEASE=$(node -p "'$PACKAGE_TAG' !== 'latest'")
           WORKFLOW_RELEASE_BODY=$(
           cat <<-_EOT_
           {
-            "tag_name":"v${PACKAGE_VERSION}",
-            "name":"v${PACKAGE_VERSION}",
-            "prerelease":${WORKFLOW_RELEASE_PRERELEASE},
-            "generate_release_notes":true
+            "tag_name": "v${PACKAGE_VERSION}",
+            "name": "v${PACKAGE_VERSION}",
+            "prerelease": ${WORKFLOW_RELEASE_PRERELEASE},
+            "generate_release_notes": true
           }
           _EOT_
           )
