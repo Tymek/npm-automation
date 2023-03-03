@@ -13,15 +13,18 @@ on:
 
 jobs:
   build-test-release:
+    name: Release train 🚂 choo choo
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/setup-node@v3
+        id: setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org"
 
       - uses: actions/checkout@v3
+        id: setup-git-checkout
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 2
@@ -34,29 +37,31 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
-      - name: Get version from package.json
+      - name: 🔍️ Get version from package.json
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           PACKAGE_TAG=$(node -p "/^\d(?:\.\d)*\-([\w\-]+)[\.\+]?.*$/.exec('$PACKAGE_VERSION')?.[1] ?? 'latest'")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "PACKAGE_TAG=$PACKAGE_TAG" >> $GITHUB_ENV
 
-      - name: Run tests
+      # TODO: 🔨 Build
+
+      - name: 🧪 Run tests
         run: pnpm test
 
-      - name: Create git tag
+      - name: 🔖 Create git tag
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git tag v$PACKAGE_VERSION
           git push --tags
 
-      - name: Publish to NPM
+      - name: 📦️ Publish to NPM
         run: pnpm publish --access public --tag $PACKAGE_TAG
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish GitHub Release
+      - name: 📝 Publish GitHub Release
         run: |
           WORKFLOW_RELEASE_PRERELEASE=$(node -p "'$PACKAGE_TAG' !== 'latest'")
           WORKFLOW_RELEASE_BODY=$(

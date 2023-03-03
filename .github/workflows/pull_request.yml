@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - uses: actions/setup-node@v3
+        id: setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -23,28 +24,30 @@ jobs:
           run_install: false
 
       - uses: actions/checkout@v3
+        id: setup-git-checkout
         with:
           fetch-depth: 25
 
-      - id: pnpm-cache
+      - id: pnpm-cache-path
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
-        name: Setup pnpm cache
+        name: 🗃️ Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies
+      - name: 📌 Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
-      # TODO: build
+      # TODO: 🔨 Build
 
       - uses: actions/cache@v3
+        name: 🗃️ Cache build
         timeout-minutes: 10
         id: cache-build
         with:
@@ -67,11 +70,12 @@ jobs:
           run_install: false
 
       - uses: actions/cache@v3
+        name: 🗃️ Restore build cache
         timeout-minutes: 5
         id: restore-build
         with:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
-      - name: Run tests
+      - name: 🧪 Run tests
         run: pnpm test
