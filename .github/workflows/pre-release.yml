@@ -1,4 +1,4 @@
-name: Bump pre-release version
+name: 🚀 Bump pre-release version
 
 env:
   NODE_VERSION: 19
