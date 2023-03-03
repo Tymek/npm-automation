@@ -21,6 +21,10 @@ jobs:
   chore-bump-version:
     name: Chore
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - uses: actions/setup-node@v3
         with:

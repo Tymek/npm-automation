@@ -7,6 +7,10 @@ jobs:
   debug:
     name: Check GitHub release
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - uses: actions/checkout@v3
         id: setup-git-checkout
@@ -22,6 +26,8 @@ jobs:
           echo "PACKAGE_TAG=$PACKAGE_TAG" >> $GITHUB_ENV
 
       - name: Publish GitHub Release (MOCK)
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.WORKFLOW_SECRET }}
         run: |
           WORKFLOW_RELEASE_PRERELEASE=$(node -p "'$PACKAGE_TAG' !== 'latest'")
           WORKFLOW_RELEASE_BODY=$(

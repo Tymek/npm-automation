@@ -15,6 +15,9 @@ jobs:
   build-test-release:
     name: Release train choo choo
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/setup-node@v3
@@ -62,6 +65,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 📝 Publish GitHub Release
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
           WORKFLOW_RELEASE_PRERELEASE=$(node -p "'$PACKAGE_TAG' !== 'latest'")
           WORKFLOW_RELEASE_BODY=$(
