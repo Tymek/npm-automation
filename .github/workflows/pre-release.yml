@@ -19,7 +19,7 @@ on:
 
 jobs:
   chore-bump-version:
-    name: Chore - bump version 🚀
+    name: Chore
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v3
