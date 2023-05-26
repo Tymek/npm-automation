@@ -12,7 +12,7 @@ on:
         required: false
         type: string
         default: "latest"
-      working-directory:
+      directory:
         description: "Directory of package.json"
         type: string
         required: false
@@ -51,8 +51,8 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: 🔖 NPM version
+        working-directory: ${{ github.event.inputs.directory }}
         run: |
-          cd ${{ github.event.inputs.working-directory }}
           npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
