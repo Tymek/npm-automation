@@ -26,9 +26,6 @@ on:
 jobs:
   version-tag-publish-release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -57,11 +54,13 @@ jobs:
           npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
+        working-directory: ${{ inputs.working-directory }}
         env:
           CI: true
 
       - name: 📦️ Publish to NPM
         run: npm publish --access public --tag ${{ inputs.tag }}
+        working-directory: ${{ inputs.working-directory }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
