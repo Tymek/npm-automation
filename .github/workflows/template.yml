@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: "latest"
+      working-directory:
+        description: "Directory of package.json"
+        type: string
+        required: false
+        default: "."
     secrets:
       GH_ACCESS_TOKEN:
         description: "GitHub token with repository write access"
@@ -39,9 +44,16 @@ jobs:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
 
+      - name: Set version variable and directory
+        # prevent double v "vv1.2.3" tags, go to package directory
+        run: |
+          PACKAGE_VERSION=$(node -p "'${{ github.event.inputs.version }}'.replace(/^v/, '')")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          cd ${{ github.event.inputs.working-directory }}
+
       - name: 🔖 NPM version
         run: |
-          npm version ${{ github.event.inputs.version }} --ignore-scripts
+          npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
         env:
@@ -58,8 +70,8 @@ jobs:
           WORKFLOW_RELEASE_BODY=$(
           cat <<-_EOT_
           {
-            "tag_name": "v${{ github.event.inputs.version }}",
-            "name": "v${{ github.event.inputs.version }}",
+            "tag_name": "v${PACKAGE_VERSION}",
+            "name": "v${PACKAGE_VERSION}",
             "prerelease": ${WORKFLOW_RELEASE_PRERELEASE},
             "generate_release_notes": true
           }
