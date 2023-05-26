@@ -1,9 +1,5 @@
 name: 🚀 Release
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +14,7 @@ on:
         default: "latest"
 
 jobs:
-  npm-version:
+  from-template:
     uses: Tymek/npm-automation/.github/workflows/template.yml@main
     with:
       version: ${{ github.event.inputs.version }}

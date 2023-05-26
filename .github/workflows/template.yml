@@ -1,9 +1,5 @@
 name: Create release (template)
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 on:
   workflow_call:
     inputs:
@@ -25,7 +21,7 @@ on:
         required: true
 
 jobs:
-  build:
+  version-tag-publish-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
