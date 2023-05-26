@@ -1,4 +1,4 @@
-name: Run npm version and push tags
+name: Create release (template)
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
