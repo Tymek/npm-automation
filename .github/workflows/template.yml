@@ -49,13 +49,15 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: 🔖 NPM version
-        run: |
-          npm version ${PACKAGE_VERSION} --ignore-scripts
-          git push origin ${{ github.ref_name }}
-          git push --tags
+        run: npm version ${PACKAGE_VERSION} --ignore-scripts
         working-directory: ${{ inputs.working-directory }}
         env:
           CI: true
+
+      - name: 🚢 Push to git
+        run: |
+          git push origin ${{ github.ref_name }}
+          git push --tags
 
       - name: 📦️ Publish to NPM
         run: npm publish --access public --tag ${{ inputs.tag }}
