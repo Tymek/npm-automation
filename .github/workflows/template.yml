@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
 
       - name: 🔖 NPM version
         run: |
