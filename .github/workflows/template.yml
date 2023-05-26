@@ -1,0 +1,45 @@
+name: Run npm version and push tags
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: What version would you like to use?
+        required: true
+        type: string
+    secrets:
+      gh-access-token:
+        description: "A token passed from the caller workflow"
+        required: false
+
+env:
+  NODE_VERSION: lts/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.gh-access-token }}
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile --ignore-scripts
+      - name: npm version
+        run: |
+          npm version ${{ github.event.inputs.version }} --ignore-scripts
+          git push origin ${{ github.ref_name }}
+          git push --tags
+        env:
+          CI: true
