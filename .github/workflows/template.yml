@@ -44,15 +44,15 @@ jobs:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
 
-      - name: Set version variable and directory
+      - name: Set version variable
         # prevent double v "vv1.2.3" tags, go to package directory
         run: |
           PACKAGE_VERSION=$(node -p "'${{ github.event.inputs.version }}'.replace(/^v/, '')")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
-          cd ${{ github.event.inputs.working-directory }}
 
       - name: 🔖 NPM version
         run: |
+          cd ${{ github.event.inputs.working-directory }}
           npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
