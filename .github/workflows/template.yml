@@ -51,11 +51,12 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: 🔖 NPM version
-        working-directory: ${{ github.event.inputs.directory }}
         run: |
+          echo ${{ github.event.inputs.directory }}
           npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
+        working-directory: ${{ github.event.inputs.directory }}
         env:
           CI: true
 
