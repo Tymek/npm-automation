@@ -15,7 +15,7 @@ on:
 
 jobs:
   from-template:
-    uses: ./.github/workflows/template.yml@main
+    uses: Tymek/npm-automation/.github/workflows/template.yml@main
     with:
       version: ${{ github.event.inputs.version }}
       tag: ${{ github.event.inputs.tag }}
