@@ -48,7 +48,7 @@ jobs:
           CI: true
 
       - name: 📦️ Publish to NPM
-        run: pnpm publish --access public --tag ${{ github.event.inputs.tag }}
+        run: npm publish --access public --tag ${{ github.event.inputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
