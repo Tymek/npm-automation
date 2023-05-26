@@ -9,14 +9,14 @@ on:
         type: string
       tag:
         description: NPM tag
-        required: false
+        required: true
         type: string
         default: "latest"
-      directory:
+      working-directory:
         description: "Directory of package.json"
         type: string
         required: false
-        default: "."
+        default: .
     secrets:
       GH_ACCESS_TOKEN:
         description: "GitHub token with repository write access"
@@ -31,7 +31,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ${{ github.event.inputs.directory }}
+        working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -51,12 +51,12 @@ jobs:
       - name: Set version variable
         # prevent double v "vv1.2.3" tags, go to package directory
         run: |
-          PACKAGE_VERSION=$(node -p "'${{ github.event.inputs.version }}'.replace(/^v/, '')")
+          PACKAGE_VERSION=$(node -p "'${{ inputs.version }}'.replace(/^v/, '')")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo ${{ inputs.working-directory }}
 
       - name: 🔖 NPM version
         run: |
-          echo ${{ github.event.inputs.directory }}
           npm version ${PACKAGE_VERSION} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
@@ -64,13 +64,13 @@ jobs:
           CI: true
 
       - name: 📦️ Publish to NPM
-        run: npm publish --access public --tag ${{ github.event.inputs.tag }}
+        run: npm publish --access public --tag ${{ inputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
       - name: 📝 Publish GitHub Release
         run: |
-          WORKFLOW_RELEASE_PRERELEASE=$(node -p "'${{ github.event.inputs.tag }}' !== 'latest'")
+          WORKFLOW_RELEASE_PRERELEASE=$(node -p "'${{ inputs.tag }}' !== 'latest'")
           WORKFLOW_RELEASE_BODY=$(
           cat <<-_EOT_
           {
