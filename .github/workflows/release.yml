@@ -8,9 +8,21 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: What version would you like to use?
+        description: New version semver
+        required: true
+        type: string
+      tag:
+        description: NPM tag
+        required: false
+        type: string
+        default: "latest"
 
 jobs:
   npm-version:
-    uses: unleash/.github/.github/workflows/npm-version.yml@main
-    secrets: inherit
+    uses: Tymek/npm-automation/.github/workflows/template.yml@main
+    with:
+      version: ${{ github.event.inputs.version }}
+      tag: ${{ github.event.inputs.tag }}
+    secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+      NPM_ACCESS_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
