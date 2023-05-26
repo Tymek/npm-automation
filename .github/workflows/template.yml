@@ -9,13 +9,11 @@ on:
         type: string
       tag:
         description: NPM tag
-        required: true
         type: string
         default: "latest"
       working-directory:
         description: "Directory of package.json"
         type: string
-        required: false
         default: .
     secrets:
       GH_ACCESS_TOKEN:
@@ -30,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash
         working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@v3
