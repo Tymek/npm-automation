@@ -4,7 +4,8 @@
   "description": "JS SDK release workflow",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "prepack": "cp ../README.md ./README.md"
   },
   "repository": {
     "type": "git",
