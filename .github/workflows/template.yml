@@ -49,7 +49,7 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: 🔖 NPM version
-        run: npm version ${PACKAGE_VERSION} --ignore-scripts
+        run: yarn version --new-version ${PACKAGE_VERSION} --no-commit-hooks
         working-directory: ${{ inputs.working-directory }}
         env:
           CI: true
