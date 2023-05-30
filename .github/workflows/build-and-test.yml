@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: lib
+
 jobs:
   node:
     runs-on: ubuntu-latest
