@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "prepack": "yarn install",
-    "prepare": "cp ../README.md ./README.md"
+    "prepare": "cp ../README.md ./README.md && yarn build",
+    "build": "tsc index.ts"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Tymek/npm-automation/issues"
   },
-  "homepage": "https://github.com/Tymek/npm-automation#readme"
+  "homepage": "https://github.com/Tymek/npm-automation#readme",
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  }
 }
