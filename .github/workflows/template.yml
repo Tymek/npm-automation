@@ -15,6 +15,10 @@ on:
         description: "Directory of package.json"
         type: string
         default: .
+      build-command:
+        description: "Command to run before publishing"
+        type: string
+        default: "yarn install --frozen-lockfile && yarn build"
     secrets:
       GH_ACCESS_TOKEN:
         description: "GitHub token with repository write access"
@@ -48,11 +52,13 @@ jobs:
           PACKAGE_VERSION=$(node -p "'${{ inputs.version }}'.replace(/^v/, '')")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
+      - name: 🏗️ Build
+        run: ${{ inputs.build-command }}
+        working-directory: ${{ inputs.working-directory }}
+
       - name: 🔖 NPM version
         run: yarn version --new-version ${PACKAGE_VERSION} --no-commit-hooks
         working-directory: ${{ inputs.working-directory }}
-        env:
-          CI: true
 
       - name: 🚢 Push to git
         run: |

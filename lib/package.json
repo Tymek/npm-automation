@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
-    "prepack": "yarn install",
-    "prepare": "cp ../README.md ./README.md && yarn build",
+    "prepare": "cp ../README.md ./README.md",
     "build": "tsc index.ts"
   },
   "repository": {
